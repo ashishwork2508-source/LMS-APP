@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Defence LMS Dashboard</title>
+  <style>
+    :root {
+      --primary: #1e3a8a;    /* Navy Blue */
+      --secondary: #d97706;  /* Military Gold/Amber */
+      --bg-gray: #f3f4f6;
+      --card-bg: #ffffff;
+      --text-dark: #1f2937;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    body { background-color: var(--bg-gray); color: var(--text-dark); }
+
+    /* Top Navigation Bar */
+    header {
+      background-color: var(--primary);
+      color: white;
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand { font-size: 1.25rem; font-weight: bold; }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .lang-select, .btn-login {
+      background: rgba(255, 255, 255, 0.15);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      padding: 6px 14px;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+    .btn-login { background-color: var(--secondary); border: none; font-weight: 600; }
+
+    /* Announcement Banner */
+    .ticker {
+      background-color: #fef3c7;
+      color: #92400e;
+      padding: 10px 24px;
+      font-size: 0.88rem;
+      border-bottom: 1px solid #fde68a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .badge { background: #b45309; color: white; padding: 2px 8px; border-radius: 4px; font-weight: bold; font-size: 0.75rem; }
+
+    /* Container */
+    .dashboard-container { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
+
+    /* Quick Action Grid Buttons */
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .action-card {
+      background: var(--card-bg);
+      border-left: 4px solid var(--primary);
+      padding: 16px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+    .action-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+    .action-card h4 { font-size: 1rem; color: var(--primary); margin-bottom: 4px; }
+    .action-card p { font-size: 0.8rem; color: #6b7280; }
+
+    /* Course Section Tabs */
+    .section-title { font-size: 1.4rem; font-weight: 600; margin-bottom: 16px; }
+    .course-tabs { display: flex; gap: 12px; margin-bottom: 20px; border-bottom: 2px solid #e5e7eb; }
+    .tab {
+      padding: 8px 16px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #6b7280;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    .tab.active { color: var(--primary); border-color: var(--primary); }
+
+    /* Course Cards Grid */
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+    .course-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+      display: flex;
+      flex-direction: column;
+    }
+    .course-header {
+      height: 120px;
+      background: linear-gradient(135deg, var(--primary), #3b82f6);
+      color: white;
+      padding: 16px;
+      display: flex;
+      align-items: flex-end;
+    }
+    .course-body { padding: 16px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .course-title { font-size: 1.1rem; font-weight: bold; margin-bottom: 8px; }
+    .course-meta { font-size: 0.85rem; color: #6b7280; margin-bottom: 16px; }
+    .btn-course {
+      width: 100%;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 4px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: none;
+      display: block;
+    }
+    .btn-course:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header>
+    <div class="brand">Vishvasniya LMS</div>
+    <div class="nav-actions">
+      <select class="lang-select">
+        <option value="en">English (en)</option>
+        <option value="hi">हिंदी (hi)</option>
+      </select>
+      <a href="https://defencecoaching.org/login/index.php" class="btn-login">Log in</a>
+    </div>
+  </header>
+
+  <!-- Live Notice Ticker -->
+  <div class="ticker">
+    <span class="badge">UPCOMING EXAMS</span>
+    <span>NDA & NA (II) Exam Date: 13 September | Sainik School (AISSEE) Class 6 Course is Live Now!</span>
+  </div>
+
+  <div class="dashboard-container">
+    
+    <!-- Quick Access Feature Buttons -->
+    <div class="action-grid">
+      <a href="#" class="action-card">
+        <h4>🎥 Live & Recorded Classes</h4>
+        <p>Interactive video sessions in Hindi & English</p>
+      </a>
+      <a href="#" class="action-card">
+        <h4>📚 Study Notes & PPTs</h4>
+        <p>Download subject repositories & key materials</p>
+      </a>
+      <a href="#" class="action-card">
+        <h4>📝 Mock Tests & Quizzes</h4>
+        <p>Practice previous year papers & answer keys</p>
+      </a>
+      <a href="#" class="action-card">
+        <h4>🛡️ SSB Mentorship</h4>
+        <p>Interview preparation by Defence Veterans</p>
+      </a>
+    </div>
+
+    <!-- Course Overview Section -->
+    <h2 class="section-title">Course Overview</h2>
+    <div class="course-tabs">
+      <div class="tab active">All Available Courses</div>
+      <div class="tab">In Progress</div>
+    </div>
+
+    <!-- Course Cards Grid -->
+    <div class="course-grid">
+      
+      <!-- Card 1 -->
+      <div class="course-card">
+        <div class="course-header">
+          <h3>NDA & NA Guidance</h3>
+        </div>
+        <div class="course-body">
+          <div>
+            <div class="course-title">NDA Full Preparation Batch</div>
+            <div class="course-meta">Includes Maths, General Ability Test, and SSB Interview strategies.</div>
+          </div>
+          <a href="https://defencecoaching.org/course/index.php" class="btn-course">Access Course</a>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="course-card">
+        <div class="course-header" style="background: linear-gradient(135deg, #065f46, #10b981);">
+          <h3>Sainik School (AISSEE)</h3>
+        </div>
+        <div class="course-body">
+          <div>
+            <div class="course-title">Sainik School Class VI Entrance</div>
+            <div class="course-meta">Structured MCQs, animated video lessons, and mock papers.</div>
+          </div>
+          <a href="https://defencecoaching.org/course/index.php" class="btn-course">Access Course</a>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="course-card">
+        <div class="course-header" style="background: linear-gradient(135deg, #991b1b, #ef4444);">
+          <h3>Agniveer Entry</h3>
+        </div>
+        <div class="course-body">
+          <div>
+            <div class="course-title">Agniveer Air Force & Army</div>
+            <div class="course-meta">Focused exam preparation, syllabus overview, and regular quizzes.</div>
+          </div>
+          <a href="https://defencecoaching.org/course/index.php" class="btn-course">Access Course</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</body>
+</html>
