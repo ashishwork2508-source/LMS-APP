@@ -128,6 +128,17 @@
       gap: 0.75rem;
     }
 
+    .install-info {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.82);
+      margin-top: 0.35rem;
+      display: none;
+    }
+
+    .install-info.visible {
+      display: block;
+    }
+
     .btn-primary,
     .btn-secondary,
     .btn-tertiary {
@@ -222,8 +233,7 @@
 
     .hero-image-card img {
       width: 100%;
-      height: auto;
-      max-height: clamp(160px, 36vh, 420px);
+      height: 100%;
       object-fit: cover;
       object-position: center;
       display: block;
@@ -582,6 +592,7 @@
           <button class="btn btn-secondary" type="button" onclick="openAuthModal()">Login</button>
           <button id="pwa-install-btn-top" class="btn btn-primary" type="button" onclick="installPWA()">Install App</button>
         </div>
+        <div id="install-info" class="install-info" aria-live="polite"></div>
       </div>
     </header>
 
@@ -598,7 +609,7 @@
         </div>
 
             <div class="hero-image-card" style="background-color:#e9f2f8; background-image: url('./1.jpg'); background-size: cover; background-position: center;">
-              <!-- background-image used for better compatibility on mobile/file:// views -->
+              <img src="./1.jpg" alt="Defence aspirant training photo" loading="eager" />
             </div>
       </div>
     </section>
@@ -695,6 +706,7 @@
 
     let deferredPrompt;
     const installButton = document.getElementById('pwa-install-btn-top');
+    const installInfo = document.getElementById('install-info');
 
     function isIos() {
       return /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
@@ -707,13 +719,19 @@
       return 'Install prompt is not available in this browser. Use your browser menu or Add to Home screen.';
     }
 
+    function showInstallMessage(message) {
+      if (!installInfo) return;
+      installInfo.textContent = message;
+      installInfo.classList.add('visible');
+    }
+
     window.addEventListener('beforeinstallprompt', (event) => {
       event.preventDefault();
       deferredPrompt = event;
       if (installButton) {
-        installButton.disabled = false;
         installButton.textContent = 'Install App';
       }
+      showInstallMessage('Install is ready. Tap the Install App button to add this app to your home screen.');
     });
 
     window.addEventListener('appinstalled', () => {
@@ -722,6 +740,7 @@
         installButton.textContent = 'Installed';
         installButton.disabled = true;
       }
+      showInstallMessage('App installed successfully. Launch it from your home screen or app drawer.');
     });
 
     async function installPWA() {
@@ -736,13 +755,13 @@
           }
         } catch (error) {
           console.error('Install prompt failed:', error);
-          alert(getFallbackInstallMessage());
+          showInstallMessage(getFallbackInstallMessage());
         }
         deferredPrompt = null;
         return;
       }
 
-      alert(getFallbackInstallMessage());
+      showInstallMessage(getFallbackInstallMessage());
     }
 
     function openAuthModal() {
@@ -775,24 +794,8 @@
         });
       });
 
-      // Load the hero image from the base64 file if available (1.b64),
-      // otherwise fall back to the local JPEG. This keeps the HTML small
-      // while allowing a reliable inline-data fallback when served over HTTP.
-      const heroCard = document.querySelector('.hero-image-card');
-      if (heroCard) {
-        fetch('./1.b64')
-          .then((res) => {
-            if (!res.ok) throw new Error('b64 fetch failed');
-            return res.text();
-          })
-          .then((b64) => {
-            const cleaned = b64.replace(/\s+/g, '');
-            heroCard.style.backgroundImage = "url('data:image/jpeg;base64," + cleaned + "')";
-          })
-          .catch(() => {
-            // keep existing background-image (./1.jpg) if fetch fails
-            heroCard.style.backgroundImage = "url('./1.jpg')";
-          });
+      if (!('onbeforeinstallprompt' in window) && !isIos()) {
+        showInstallMessage('If the install prompt does not appear, use your browser menu and choose Install App or Add to Home screen.');
       }
     });
 
