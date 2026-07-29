@@ -135,6 +135,45 @@
         border-radius: 1rem;
         box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
       }
+      .install-notice {
+        margin-top: 0.8rem;
+        color: #e2e8f0;
+        font-size: 0.95rem;
+      }
+      .modal.hidden { display: none; }
+      .modal {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+      }
+      .modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(15, 23, 42, 0.6);
+      }
+      .modal-card {
+        position: relative;
+        margin: auto;
+        top: 10%;
+        max-width: 420px;
+        background: white;
+        border-radius: 1.1rem;
+        padding: 1.5rem;
+        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
+      }
+      .modal-card h3 {
+        margin-top: 0;
+        color: #0f172a;
+      }
+      .modal-card p {
+        margin: 1rem 0 1.4rem;
+        color: #475569;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 0.85rem;
+        flex-wrap: wrap;
+      }
       .hidden { display: none; }
       @media (max-width: 1000px) {
         .hero { grid-template-columns: 1fr; }
@@ -216,10 +255,11 @@
             <h1>Learn, practice, and crack your next defence exam with confidence.</h1>
             <p>Access live classes, study material, test series, and LMS resources for NDA, Sainik and SSB preparation from one elegant platform.</p>
             <div class="btn-row">
-              <a class="btn btn-primary" href="https://defencecoaching.org/login/index.php" target="_blank" rel="noopener noreferrer">Open Moodle LMS</a>
+              <a class="btn btn-primary auth-required" href="#" data-href="https://defencecoaching.org/login/index.php">Open Moodle LMS</a>
               <a class="btn btn-secondary" href="#courses">Browse Courses</a>
               <button id="pwa-install-btn" class="btn btn-dark hidden" type="button" onclick="installPWA()">Install App</button>
             </div>
+            <p id="install-notice" class="install-notice hidden">Install available in supported browsers. If you do not see the prompt, use your browser menu to add this app.</p>
           </div>
           <div class="panel">
             <h3>Why learners choose us</h3>
@@ -241,36 +281,35 @@
       <section id="resources">
         <h2 class="section-title">LMS Resource Hub</h2>
         <div class="resource-grid">
-          <a class="resource-card" href="https://defencecoaching.org/login/index.php" target="_blank" rel="noopener noreferrer">
+          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/login/index.php">
             <div class="icon-box">🔐</div>
             <div>
               <h3>Login to LMS</h3>
               <p>Access your dashboard, live classes, and student progress tools.</p>
             </div>
           </a>
-          <a class="resource-card" href="https://defencecoaching.org/course/index.php" target="_blank" rel="noopener noreferrer">
+          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/course/index.php">
             <div class="icon-box">📚</div>
             <div>
               <h3>Course Catalog</h3>
-              <p>Browse NDA, Sainik School, and SSB preparation courses.
-              </p>
+              <p>Browse NDA, Sainik School, and SSB preparation courses.</p>
             </div>
           </a>
-          <a class="resource-card" href="https://defencecoaching.org/" target="_blank" rel="noopener noreferrer">
+          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/">
             <div class="icon-box">🎯</div>
             <div>
               <h3>Study Resources</h3>
               <p>Find notes, quizzes, and exam-ready lesson plans on the LMS.</p>
             </div>
           </a>
-          <a class="resource-card" href="https://defencecoaching.org/" target="_blank" rel="noopener noreferrer">
+          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/">
             <div class="icon-box">🧠</div>
             <div>
               <h3>Mock Tests</h3>
               <p>Practice quizzes and test series for upgraded exam readiness.</p>
             </div>
           </a>
-          <a class="resource-card" href="https://defencecoaching.org/" target="_blank" rel="noopener noreferrer">
+          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/">
             <div class="icon-box">💬</div>
             <div>
               <h3>Support Center</h3>
@@ -286,17 +325,17 @@
           <div class="panel card">
             <h3>NDA Foundation</h3>
             <p>Complete written exam preparation with live classes, notes, and regular assessments.</p>
-            <a class="btn btn-dark" href="https://defencecoaching.org/course/index.php" target="_blank" rel="noopener noreferrer">View Courses</a>
+            <a class="btn btn-dark auth-required" href="#" data-href="https://defencecoaching.org/course/index.php">View Courses</a>
           </div>
           <div class="panel card">
             <h3>Sainik School Prep</h3>
             <p>Smart practice sessions, reasoning drills, and exam-oriented study modules.</p>
-            <a class="btn btn-dark" href="https://defencecoaching.org/course/index.php" target="_blank" rel="noopener noreferrer">Join Program</a>
+            <a class="btn btn-dark auth-required" href="#" data-href="https://defencecoaching.org/course/index.php">Join Program</a>
           </div>
           <div class="panel card">
             <h3>SSB Interview</h3>
             <p>Personality development, group tasks, and interview preparation support.</p>
-            <a class="btn btn-dark" href="https://defencecoaching.org/course/index.php" target="_blank" rel="noopener noreferrer">Start Learning</a>
+            <a class="btn btn-dark auth-required" href="#" data-href="https://defencecoaching.org/course/index.php">Start Learning</a>
           </div>
         </div>
       </section>
@@ -320,6 +359,19 @@
       </section>
     </div>
 
+    <div id="auth-modal" class="modal hidden">
+      <div class="modal-backdrop" onclick="closeAuthModal()"></div>
+      <div class="modal-card">
+        <h3>Please login or register first</h3>
+        <p>To access courses and LMS resources, please login now or create a new account.</p>
+        <div class="modal-actions">
+          <a class="btn btn-primary" href="https://defencecoaching.org/login/index.php" target="_blank" rel="noopener noreferrer">Login Now</a>
+          <a class="btn btn-secondary" href="https://defencecoaching.org/login/signup.php" target="_blank" rel="noopener noreferrer">Register Now</a>
+        </div>
+        <button class="btn btn-outline" type="button" onclick="closeAuthModal()">Maybe later</button>
+      </div>
+    </div>
+
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -337,10 +389,15 @@
         document.querySelectorAll('#pwa-install-btn, #pwa-install-btn-top').forEach((button) => {
           if (button) button.classList.remove('hidden');
         });
+        const notice = document.getElementById('install-notice');
+        if (notice) notice.classList.remove('hidden');
       });
 
       function installPWA() {
-        if (!deferredPrompt) return;
+        if (!deferredPrompt) {
+          showInstallTip();
+          return;
+        }
         deferredPrompt.prompt();
         deferredPrompt.userChoice.then((choiceResult) => {
           if (choiceResult.outcome === 'accepted') {
@@ -352,6 +409,33 @@
           });
         });
       }
+
+      function showInstallTip() {
+        const notice = document.getElementById('install-notice');
+        if (notice) {
+          notice.textContent = 'Install is not available from this browser yet. Use your browser menu and choose Add to Home screen.';
+          notice.classList.remove('hidden');
+        }
+      }
+
+      function showAuthModal() {
+        const modal = document.getElementById('auth-modal');
+        if (modal) modal.classList.remove('hidden');
+      }
+
+      function closeAuthModal() {
+        const modal = document.getElementById('auth-modal');
+        if (modal) modal.classList.add('hidden');
+      }
+
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.auth-required').forEach((link) => {
+          link.addEventListener('click', (event) => {
+            event.preventDefault();
+            showAuthModal();
+          });
+        });
+      });
     </script>
   </body>
 </html>
