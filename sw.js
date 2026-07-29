@@ -1,5 +1,5 @@
 const CACHE_NAME = 'defence-coaching-v1';
-const ASSETS_TO_CACHE = ['./', './index.html', './manifest.json'];
+const ASSETS_TO_CACHE = ['./', './index.html', './manifest.json', './icon.svg', './icon-192x192.png', './icon-512x512.png', './sw.js'];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(

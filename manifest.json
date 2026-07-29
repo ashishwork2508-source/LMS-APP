@@ -1,12 +1,20 @@
-{
+﻿{
   "name": "Defence Coaching - NDA, Sainik & SSB Prep",
   "short_name": "DefenceCoaching",
+  "description": "Access the Defence Coaching LMS with login, courses, live support, and exam prep resources.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#f8fafc",
+  "background_color": "#eef2ff",
   "theme_color": "#0f172a",
+  "orientation": "portrait-primary",
   "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
     {
       "src": "./icon-192x192.png",
       "sizes": "192x192",
