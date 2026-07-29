@@ -4,12 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Defence Coaching - NDA, Sainik School, Agniveer & SSB Preparation</title>
+  
+  <!-- PWA Meta Tags & Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f172a">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="DefenceCoaching">
+  <link rel="apple-touch-icon" href="/icons/icon-192x192.png">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     html {
       scroll-behavior: smooth;
     }
-    /* Continuous Marquee Animation for News Bulletin */
     @keyframes marquee {
       0% { transform: translateX(100%); }
       100% { transform: translateX(-100%); }
@@ -40,10 +49,17 @@
         <a id="nav-ssb" href="#ssb" onclick="filterCourses('ssb')" class="nav-link text-slate-300 hover:text-amber-400 px-2 py-1 rounded transition">SSB Material</a>
       </nav>
 
-      <!-- Login / Logout Button -->
-      <button id="login-btn" onclick="handleAuthButtonClick()" class="shrink-0 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-sm transition">
-        Login
-      </button>
+      <div class="flex items-center gap-2">
+        <!-- PWA Install Button (Hidden by default, shown when browser allows installation) -->
+        <button id="pwa-install-btn" onclick="installPWA()" class="hidden bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-3 py-2 rounded-lg text-sm transition flex items-center gap-1">
+          <span>📲</span> Install App
+        </button>
+
+        <!-- Login / Logout Button -->
+        <button id="login-btn" onclick="handleAuthButtonClick()" class="shrink-0 bg-amber-500 hover:bg-amber-600 text-slate-900 font-bold px-4 py-2 rounded-lg text-sm transition">
+          Login
+        </button>
+      </div>
     </div>
   </header>
 
@@ -280,7 +296,7 @@
     </div>
   </div>
 
-  <!-- Login Modal (triggered by the header Login button) -->
+  <!-- Login Modal -->
   <div id="login-modal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl border border-slate-100 relative">
       <button onclick="closeLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 text-2xl font-bold">&times;</button>
@@ -302,17 +318,10 @@
     <p>&copy; 2026 DefenceCoaching.org — All rights reserved.</p>
   </footer>
 
-  <!-- Script for Filtering, Hash Navigation & Modal Popups -->
+  <!-- Page Logic & PWA Registration -->
   <script>
     // ------------------------------------------------------------------
     // LOGIN STATE (front-end only)
-    // This page is static and has no backend of its own, so it cannot truly
-    // verify a Moodle session. isLoggedIn is set optimistically to true the
-    // moment a visitor clicks through to Login / Create Free Account on
-    // defencecoaching.org. Treat this purely as a UX nicety that nudges
-    // people toward logging in — it is NOT access control. Real protection
-    // of course content is (and must stay) enforced by Moodle itself at
-    // defencecoaching.org, not by this JS flag.
     // ------------------------------------------------------------------
     let isLoggedIn = false;
 
@@ -366,14 +375,12 @@
       const filterBtns = document.querySelectorAll('.filter-btn');
       const navLinks = document.querySelectorAll('.nav-link');
 
-      // Update URL hash smoothly
       if (category !== 'all') {
         history.replaceState(null, null, `#${category}`);
       } else {
         history.replaceState(null, null, window.location.pathname);
       }
 
-      // Show/Hide Course Cards
       cards.forEach(card => {
         const cardCat = card.getAttribute('data-category');
         if (category === 'all' || cardCat === category) {
@@ -383,7 +390,6 @@
         }
       });
 
-      // Update Pill Filter Button Styles
       filterBtns.forEach(btn => {
         btn.classList.remove('bg-amber-500', 'text-slate-900', 'shadow');
         btn.classList.add('bg-white', 'text-slate-700');
@@ -394,7 +400,6 @@
         activeBtn.classList.add('bg-amber-500', 'text-slate-900', 'shadow');
       }
 
-      // Update Header Navigation Styles
       navLinks.forEach(link => {
         link.classList.remove('text-amber-400', 'font-semibold');
         link.classList.add('text-slate-300');
@@ -405,13 +410,11 @@
         activeNav.classList.add('text-amber-400', 'font-semibold');
       }
 
-      // Smooth scroll into course view when using links
       if (doScroll && window.scrollY > 200) {
         document.getElementById('courses').scrollIntoView({ behavior: 'smooth' });
       }
     }
 
-    // Modal Control Logic
     function openModal(title, category, description, actionType, courseUrl) {
       document.getElementById('modal-title').innerText = title;
       document.getElementById('modal-badge').innerText = category;
@@ -431,19 +434,13 @@
       document.getElementById('info-modal').classList.add('hidden');
     }
 
-    // Close modal when clicking outside of it
     window.onclick = function(event) {
       const modal = document.getElementById('info-modal');
       const loginModal = document.getElementById('login-modal');
-      if (event.target === modal) {
-        closeModal();
-      }
-      if (event.target === loginModal) {
-        closeLoginModal();
-      }
+      if (event.target === modal) closeModal();
+      if (event.target === loginModal) closeLoginModal();
     };
 
-    // Auto-detect URL Hash on Page Load & Hash Changes
     function handleHashChange() {
       const hash = window.location.hash.replace('#', '');
       if (['nda', 'sainik', 'agniveer', 'ssb'].includes(hash)) {
@@ -455,7 +452,37 @@
 
     window.addEventListener('DOMContentLoaded', handleHashChange);
     window.addEventListener('hashchange', handleHashChange);
+
+    // ------------------------------------------------------------------
+    // PWA SERVICE WORKER & INSTALLATION PROMPT
+    // ------------------------------------------------------------------
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((reg) => console.log('Service Worker registered successfully:', reg.scope))
+          .catch((err) => console.error('Service Worker registration failed:', err));
+      });
+    }
+
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const installBtn = document.getElementById('pwa-install-btn');
+      if (installBtn) installBtn.classList.remove('hidden');
+    });
+
+    function installPWA() {
+      if (!deferredPrompt) return;
+      deferredPrompt.prompt();
+      deferredPrompt.userChoice.then((choiceResult) => {
+        if (choiceResult.outcome === 'accepted') {
+          console.log('User accepted the PWA install prompt');
+        }
+        deferredPrompt = null;
+        document.getElementById('pwa-install-btn').classList.add('hidden');
+      });
+    }
   </script>
 </body>
 </html>
-  
