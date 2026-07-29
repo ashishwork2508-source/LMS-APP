@@ -1,33 +1,77 @@
-<script>
-  // ------------------------------------------------------------------
-  // PWA SERVICE WORKER & INSTALLATION PROMPT (UPDATED PATHS)
-  // ------------------------------------------------------------------
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-      // Uses relative path './sw.js' so it works on any Vercel/GitHub URL
-      navigator.serviceWorker.register('./sw.js')
-        .then((reg) => console.log('Service Worker active on scope:', reg.scope))
-        .catch((err) => console.error('Service Worker failed to register:', err));
-    });
-  }
-
-  let deferredPrompt;
-  window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    const installBtn = document.getElementById('pwa-install-btn');
-    if (installBtn) installBtn.classList.remove('hidden');
-  });
-
-  function installPWA() {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        console.log('PWA installation accepted');
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0f172a" />
+    <meta
+      name="description"
+      content="Defence coaching PWA for NDA, Sainik, and SSB preparation."
+    />
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" href="./icon-192x192.png" />
+    <title>Defence Coaching</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 2rem;
+        background: #f8fafc;
+        color: #0f172a;
       }
-      deferredPrompt = null;
-      document.getElementById('pwa-install-btn').classList.add('hidden');
-    });
-  }
-</script>
+      .hidden {
+        display: none;
+      }
+      button {
+        margin-top: 1rem;
+        padding: 0.75rem 1rem;
+        border: 0;
+        border-radius: 0.5rem;
+        background: #0f172a;
+        color: #fff;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Defence Coaching</h1>
+      <p>Install this app to access it as a Progressive Web App.</p>
+      <button id="pwa-install-btn" class="hidden" type="button" onclick="installPWA()">
+        Install App
+      </button>
+    </main>
+
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('./sw.js')
+            .then((reg) => console.log('Service Worker active on scope:', reg.scope))
+            .catch((err) => console.error('Service Worker failed to register:', err));
+        });
+      }
+
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (event) => {
+        event.preventDefault();
+        deferredPrompt = event;
+        const installBtn = document.getElementById('pwa-install-btn');
+        if (installBtn) installBtn.classList.remove('hidden');
+      });
+
+      function installPWA() {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('PWA installation accepted');
+          }
+          deferredPrompt = null;
+          const installBtn = document.getElementById('pwa-install-btn');
+          if (installBtn) installBtn.classList.add('hidden');
+        });
+      }
+    </script>
+  </body>
+</html>
