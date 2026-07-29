@@ -1,0 +1,16 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Logs
+npm-debug.log*
+.YarnIntegrity
+
+# Vercel
+.vercel/
+
+# Python cache
+__pycache__/

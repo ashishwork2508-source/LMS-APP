@@ -1,455 +1,795 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0f172a" />
-    <meta name="mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta
-      name="description"
-      content="Defence Coaching LMS portal for NDA, Sainik, and SSB preparation."
-    />
-    <link rel="manifest" href="./manifest.json" />
-    <link rel="icon" href="./icon.svg" type="image/svg+xml" />
-    <link rel="apple-touch-icon" href="./icon-192x192.png" />
-    <title>Defence Coaching LMS</title>
-    <style>
-      :root {
-        color-scheme: light;
-        --bg: #f8fafc;
-        --text: #0f172a;
-        --muted: #475569;
-        --accent: #0f766e;
-        --accent-2: #f59e0b;
-        --card: #ffffff;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="Defence Coaching LMS portal for NDA, Sainik, Agniveer, and SSB preparation." />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="./icon-192x192.png" />
+  <title>Defence Coaching - NDA, Sainik School, Agniveer & SSB</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --surface-strong: #0f172a;
+      --text: #0f172a;
+      --muted: #4b5563;
+      --accent: #fbbf24;
+      --accent-dark: #d97706;
+      --primary: #0f766e;
+      --border: rgba(15, 23, 42, 0.08);
+      --shadow: 0 24px 48px rgba(15, 23, 42, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4fb 100%);
+      color: var(--text);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    .btn {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .page {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 1rem 1rem 3rem;
+    }
+
+    header {
+      background: #0f172a;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+    }
+
+    .header-inner {
+      max-width: 1140px;
+      margin: 0 auto;
+      padding: 1rem 0;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 1rem;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: #f8fafc;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+    }
+
+    .nav-links a {
+      color: rgba(255, 255, 255, 0.88);
+      font-weight: 600;
+      padding: 0.7rem 0.95rem;
+      border-radius: 999px;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      background: rgba(255, 255, 255, 0.1);
+      color: #ffffff;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-tertiary {
+      border-radius: 999px;
+      padding: 0.95rem 1.4rem;
+      font-weight: 700;
+      border: none;
+      transition: transform 0.24s ease, background 0.24s ease;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #111827;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-dark);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.12);
+      color: #ffffff;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.18);
+    }
+
+    .btn-tertiary {
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+    }
+
+    .btn-tertiary:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .hero {
+      margin-top: 1rem;
+      border-radius: 1.8rem;
+      background: linear-gradient(135deg, #0f172a 0%, #14532d 100%);
+      color: white;
+      padding: 2rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 22%),
+        radial-gradient(circle at bottom right, rgba(255, 255, 255, 0.08), transparent 18%);
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1.5rem;
+    }
+
+    .hero-copy h1 {
+      margin: 0;
+      font-size: clamp(2.2rem, 4vw, 3.8rem);
+      line-height: 1.02;
+    }
+
+    .hero-copy p {
+      margin: 1.2rem 0 1.6rem;
+      max-width: 620px;
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.75;
+      font-size: 1rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.9rem;
+    }
+
+    /* Hero image card: ensure image is visible and covers area on small screens */
+    .hero-image-card {
+      border-radius: 1.2rem;
+      overflow: hidden;
+      display: block;
+      min-height: 240px;
+      box-shadow: 0 12px 30px rgba(2,6,23,0.18);
+    }
+
+    .hero-image-card img {
+      width: 100%;
+      height: auto;
+      max-height: clamp(160px, 36vh, 420px);
+      object-fit: cover;
+      object-position: center;
+      display: block;
+    }
+
+    .ticker {
+      margin-top: 1.5rem;
+      padding: 1rem 1.1rem;
+      display: flex;
+      gap: 0.9rem;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 1.4rem;
+      overflow: hidden;
+    }
+
+    .ticker-title {
+      flex-shrink: 0;
+      padding: 0.55rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(248, 113, 113, 0.16);
+      color: #fee2e2;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+
+    .ticker-track {
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .ticker-text {
+      display: inline-flex;
+      white-space: nowrap;
+      gap: 2rem;
+      animation: marquee 24s linear infinite;
+      color: rgba(255, 255, 255, 0.88);
+      font-size: 0.95rem;
+    }
+
+    .ticker:hover .ticker-text {
+      animation-play-state: paused;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(100%); }
+      100% { transform: translateX(-100%); }
+    }
+
+    .section {
+      margin-top: 2rem;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 1.45rem;
+      margin-bottom: 1rem;
+      color: var(--surface-strong);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .filter-button {
+      padding: 0.85rem 1rem;
+      border-radius: 999px;
+      border: 1px solid rgba(15, 23, 42, 0.08);
+      background: #ffffff;
+      color: var(--surface-strong);
+      font-weight: 600;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .filter-button.active,
+    .filter-button:hover {
+      background: var(--accent);
+      color: #111827;
+    }
+
+    .course-grid {
+      display: grid;
+      gap: 1rem;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+    }
+
+    .course-card {
+      background: var(--surface);
+      border-radius: 1.75rem;
+      box-shadow: 0 24px 55px rgba(15, 23, 42, 0.09);
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      overflow: hidden;
+      display: grid;
+    }
+
+    .course-card .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1.25rem 1.4rem;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.88));
+    }
+
+    .card-title {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.4;
+      color: #ffffff;
+    }
+
+    .card-badge {
+      padding: 0.45rem 0.75rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .course-card[data-category="nda"] .card-top {
+      background: #111827;
+    }
+
+    .course-card[data-category="sainik"] .card-top {
+      background: #064e3b;
+    }
+
+    .course-card[data-category="agniveer"] .card-top {
+      background: #1e3a8a;
+    }
+
+    .course-card[data-category="ssb"] .card-top {
+      background: #6d28d9;
+    }
+
+    .course-meta {
+      padding: 1.35rem 1.4rem 1.8rem;
+      display: grid;
+      gap: 1.1rem;
+    }
+
+    .course-meta p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .course-meta button {
+      width: 100%;
+      padding: 1rem 1rem;
+      border-radius: 1.1rem;
+      border: none;
+      background: var(--primary);
+      color: #ffffff;
+      font-weight: 700;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .course-meta button:hover {
+      background: #0d6b60;
+      transform: translateY(-1px);
+    }
+
+    .contact-card {
+      background: var(--surface);
+      border-radius: 1.75rem;
+      padding: 1.75rem;
+      border: 1px solid rgba(15, 23, 42, 0.06);
+      box-shadow: 0 24px 55px rgba(15, 23, 42, 0.08);
+      margin-top: 2rem;
+    }
+
+    .contact-card h3 {
+      margin: 0;
+      font-size: 1.5rem;
+    }
+
+    .contact-card p {
+      margin-top: 1rem;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-top: 1.2rem;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.76);
+      display: grid;
+      place-items: center;
+      padding: 1.25rem;
+      z-index: 50;
+    }
+
+    .modal.hidden {
+      display: none;
+    }
+
+    .modal-card {
+      width: min(100%, 520px);
+      border-radius: 1.8rem;
+      padding: 1.5rem;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      position: relative;
+    }
+
+    .modal-card h3 {
+      margin: 0 0 0.9rem;
+      font-size: 1.55rem;
+    }
+
+    .modal-card p {
+      margin: 0 0 1.3rem;
+      color: var(--muted);
+      line-height: 1.75;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      margin-bottom: 1rem;
+    }
+
+    .modal-card .btn {
+      flex: 1 1 140px;
+    }
+
+    .close-modal {
+      width: 100%;
+      padding: 0.95rem 1rem;
+      border-radius: 1rem;
+      border: none;
+      background: rgba(15, 23, 42, 0.06);
+      color: var(--surface-strong);
+    }
+
+    .close-icon {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      border: none;
+      background: rgba(15, 23, 42, 0.08);
+      color: var(--muted);
+      font-size: 1.25rem;
+      cursor: pointer;
+    }
+
+    @media (max-width: 940px) {
+      .hero-grid,
+      .course-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
       }
 
-      * { box-sizing: border-box; }
-      html { scroll-behavior: smooth; }
-      body {
-        margin: 0;
-        font-family: "Segoe UI", Arial, sans-serif;
-        background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
-        color: var(--text);
-        line-height: 1.6;
-      }
-      a { color: inherit; text-decoration: none; }
-      .container {
-        max-width: 1180px;
-        margin: 0 auto;
-        padding: 1rem 1.1rem 3rem;
-      }
-      header {
-        background: linear-gradient(135deg, #0f172a 0%, #14532d 100%);
-        color: white;
-        border-radius: 1.25rem;
-        padding: 1.2rem 1.4rem 2rem;
-        box-shadow: 0 15px 35px rgba(15, 23, 42, 0.2);
-      }
-      nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 1rem;
-        margin-bottom: 1.4rem;
-      }
-      .brand {
-        font-size: 1.1rem;
-        font-weight: 800;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
       .nav-links {
-        display: flex;
+        justify-content: center;
+        width: 100%;
+      }
+
+      .hero {
+        padding: 1.2rem 1rem;
+      }
+
+      .btn-row {
+        flex-direction: column;
+      }
+
+      /* Stack hero image above copy on small screens and increase readability */
+      .hero-grid {
+        grid-template-columns: 1fr;
         gap: 1rem;
-        flex-wrap: wrap;
       }
-      .nav-links a {
-        color: rgba(255,255,255,0.92);
-        font-weight: 600;
+
+      .hero-image-card {
+        order: -1;
+        min-height: 200px;
       }
-      .top-actions {
-        display: flex;
-        gap: 0.75rem;
-        align-items: center;
-        flex-wrap: wrap;
+
+      .hero-copy h1 {
+        font-size: clamp(1.5rem, 7vw, 2.2rem);
+        margin-bottom: 0.6rem;
       }
-      .btn-outline {
-        background: rgba(255,255,255,0.08);
-        color: rgba(255,255,255,0.96);
-        border: 1px solid rgba(255,255,255,0.18);
-      }
-      .resource-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
-      }
-      .resource-card {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        padding: 1.1rem;
-        border-radius: 1.2rem;
-        background: white;
-        color: var(--text);
-        text-decoration: none;
-        box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-      .resource-card:hover {
-        transform: translateY(-3px);
-        box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
-      }
-      .icon-box {
-        width: 3rem;
-        min-width: 3rem;
-        height: 3rem;
-        border-radius: 1rem;
-        display: grid;
-        place-items: center;
-        background: linear-gradient(135deg, #0f766e, #0f172a);
-        color: white;
-        box-shadow: 0 10px 20px rgba(15, 23, 42, 0.16);
-      }
-      .resource-card h3 {
-        margin: 0 0 0.35rem;
-        font-size: 1rem;
-      }
-      .resource-card p {
-        margin: 0;
-        color: var(--muted);
+
+      .hero-copy p {
         font-size: 0.95rem;
+        margin-bottom: 1rem;
       }
-      .contact-box {
-        margin-top: 1.5rem;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 1rem;
-        flex-wrap: wrap;
-        background: white;
-        padding: 1.2rem;
-        border-radius: 1rem;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
-      }
-      .install-notice {
-        margin-top: 0.8rem;
-        color: #e2e8f0;
-        font-size: 0.95rem;
-      }
-      .modal.hidden { display: none; }
-      .modal {
-        position: fixed;
-        inset: 0;
-        z-index: 1000;
-      }
-      .modal-backdrop {
-        position: absolute;
-        inset: 0;
-        background: rgba(15, 23, 42, 0.6);
-      }
-      .modal-card {
-        position: relative;
-        margin: auto;
-        top: 10%;
-        max-width: 420px;
-        background: white;
-        border-radius: 1.1rem;
-        padding: 1.5rem;
-        box-shadow: 0 25px 60px rgba(15, 23, 42, 0.25);
-      }
-      .modal-card h3 {
-        margin-top: 0;
-        color: #0f172a;
-      }
-      .modal-card p {
-        margin: 1rem 0 1.4rem;
-        color: #475569;
-      }
-      .modal-actions {
-        display: flex;
-        gap: 0.85rem;
-        flex-wrap: wrap;
-      }
-      .hidden { display: none; }
-      @media (max-width: 1000px) {
-        .hero { grid-template-columns: 1fr; }
-        .resource-grid { grid-template-columns: 1fr; }
-      }
-      @media (max-width: 800px) {
-        .hero, .grid, .stats { grid-template-columns: 1fr; }
-      }
-      .hero h1 {
-        font-size: clamp(1.9rem, 3vw, 2.8rem);
-        margin: 0 0 0.75rem;
-        line-height: 1.2;
-      }
-      .hero p { margin: 0 0 1rem; color: rgba(255,255,255,0.9); }
-      .btn-row { display: flex; gap: 0.8rem; flex-wrap: wrap; }
-      .btn {
-        border: 0;
-        border-radius: 999px;
-        padding: 0.8rem 1rem;
-        font-weight: 700;
-        cursor: pointer;
-        display: inline-block;
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-      }
-      .btn:hover { transform: translateY(-2px); }
-      .btn-primary { background: var(--accent-2); color: #111827; }
-      .btn-secondary { background: white; color: var(--text); }
-      .btn-dark { background: #111827; color: white; }
-      .panel {
-        background: var(--card);
-        border-radius: 1rem;
-        padding: 1.2rem;
-        box-shadow: 0 10px 25px rgba(15, 23, 42, 0.1);
-      }
-      .panel ul { padding-left: 1rem; color: var(--muted); }
-      .stats {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
-        margin: 1.3rem 0 1.6rem;
-      }
-      .stat {
-        background: white;
-        border-radius: 1rem;
+
+      .hero {
         padding: 1rem;
-        text-align: center;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
       }
-      .stat strong { display: block; font-size: 1.25rem; color: var(--accent); }
-      .section-title { margin: 0 0 0.6rem; font-size: 1.4rem; }
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 1rem;
+
+      /* Ensure hero image is prominent on very small screens */
+      .hero-image-card {
+        min-height: 180px;
       }
-      .card h3 { margin-top: 0; }
-      .card p { color: var(--muted); }
-      .card .btn { margin-top: 0.5rem; }
-    </style>
-  </head>
-  <body>
-    <div class="container">
-      <header>
-        <nav>
-          <div class="brand">Defence Coaching</div>
-          <div class="nav-links">
-            <a href="#home">Home</a>
-            <a href="#courses">Courses</a>
-            <a href="#about">About</a>
-            <a href="#contact">Contact</a>
+
+      .hero-image-card img {
+        width: 100%;
+        height: auto;
+        display: block;
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <div class="header-inner">
+        <a class="brand" href="#home">
+          <div class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+              <path d="M4 11V7.5C4 6.39543 4.89543 5.5 6 5.5H18C19.1046 5.5 20 6.39543 20 7.5V11" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M6 17V11H18V17C18 18.1046 17.1046 19 16 19H8C6.89543 19 6 18.1046 6 17Z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
           </div>
-          <div class="top-actions">
-            <a class="btn btn-outline" href="https://defencecoaching.org/login/index.php" target="_blank" rel="noopener noreferrer">Login</a>
-            <button id="pwa-install-btn-top" class="btn btn-dark" type="button" onclick="installPWA()">Install App</button>
-          </div>
+          Defence Coaching
+        </a>
+
+        <nav class="nav-links" aria-label="Primary navigation">
+          <a href="#home" class="active">Home</a>
+          <a href="#courses">Programs</a>
+          <a href="#contact">Contact</a>
         </nav>
-        <div class="hero" id="home">
-          <div>
-            <h1>Learn, practice, and crack your next defence exam with confidence.</h1>
-            <p>Access live classes, study material, test series, and LMS resources for NDA, Sainik and SSB preparation from one elegant platform.</p>
-            <div class="btn-row">
-              <a class="btn btn-primary auth-required" href="#" data-href="https://defencecoaching.org/login/index.php">Open Moodle LMS</a>
-              <a class="btn btn-secondary" href="#courses">Browse Courses</a>
-              <button id="pwa-install-btn" class="btn btn-dark" type="button" onclick="installPWA()">Install App</button>
-            </div>
-            <div id="install-notice" class="install-notice hidden">
-              Install is available in supported browsers. If nothing happens when you click Install, use your browser menu and choose Add to Home screen.
-            </div>
-          </div>
-          <div class="panel">
-            <h3>Why learners choose us</h3>
-            <ul>
-              <li>Structured day-wise study plans</li>
-              <li>Live mentor support and mock tests</li>
-              <li>Mobile-friendly LMS experience</li>
-            </ul>
+
+        <div class="actions">
+          <button class="btn btn-secondary" type="button" onclick="openAuthModal()">Login</button>
+          <button class="btn btn-primary" type="button" onclick="installPWA()">Install App</button>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero" id="home">
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <p style="display:inline-flex; align-items:center; gap:0.5rem; background:rgba(255,255,255,0.12); color:#f8fafc; padding:0.65rem 1rem; border-radius:999px; font-size:0.9rem; margin-bottom:1rem;">Trusted Defence Coaching - NDA, Sainik, Agniveer & SSB</p>
+          <h1>Prepare for Your Defence Career with Expert Coaching</h1>
+          <p>Specialized coaching and study material for NDA, Sainik School, Agniveer, and SSB. Learn fast with a mobile-ready portal and seamless LMS access.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#courses">View All Programs</a>
+            <button class="btn btn-secondary" type="button" onclick="openAuthModal()">Login</button>
           </div>
         </div>
-      </header>
 
-      <div class="stats">
-        <div class="stat"><strong>1000+</strong><span>Active learners</span></div>
-        <div class="stat"><strong>24/7</strong><span>Course access</span></div>
-        <div class="stat"><strong>95%</strong><span>Practice completion</span></div>
+            <div class="hero-image-card" style="background-color:#e9f2f8; background-image: url('./1.jpg'); background-size: cover; background-position: center;">
+              <!-- background-image used for better compatibility on mobile/file:// views -->
+            </div>
+      </div>
+    </section>
+
+    <section class="section" id="courses">
+      <h2 class="section-title">Coaching Programs & Study Material</h2>
+      <div class="filters">
+        <button class="filter-button active" type="button" onclick="setFilter('all', this)">All</button>
+        <button class="filter-button" type="button" onclick="setFilter('nda', this)">NDA</button>
+        <button class="filter-button" type="button" onclick="setFilter('sainik', this)">Sainik School</button>
+        <button class="filter-button" type="button" onclick="setFilter('agniveer', this)">Agniveer</button>
+        <button class="filter-button" type="button" onclick="setFilter('ssb', this)">SSB Material</button>
       </div>
 
-      <section id="resources">
-        <h2 class="section-title">LMS Resource Hub</h2>
-        <div class="resource-grid">
-          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/login/index.php">
-            <div class="icon-box">🔐</div>
-            <div>
-              <h3>Login to LMS</h3>
-              <p>Access your dashboard, live classes, and student progress tools.</p>
-            </div>
-          </a>
-          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/course/index.php">
-            <div class="icon-box">📚</div>
-            <div>
-              <h3>Course Catalog</h3>
-              <p>Browse NDA, Sainik School, and SSB preparation courses.</p>
-            </div>
-          </a>
-          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/">
-            <div class="icon-box">🎯</div>
-            <div>
-              <h3>Study Resources</h3>
-              <p>Find notes, quizzes, and exam-ready lesson plans on the LMS.</p>
-            </div>
-          </a>
-          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/">
-            <div class="icon-box">🧠</div>
-            <div>
-              <h3>Mock Tests</h3>
-              <p>Practice quizzes and test series for upgraded exam readiness.</p>
-            </div>
-          </a>
-          <a class="resource-card auth-required" href="#" data-href="https://defencecoaching.org/">
-            <div class="icon-box">💬</div>
-            <div>
-              <h3>Support Center</h3>
-              <p>Connect with coaching support and LMS enrollment guidance.</p>
-            </div>
-          </a>
-        </div>
-      </section>
-
-      <section id="courses">
-        <h2 class="section-title">Popular Programs</h2>
-        <div class="grid">
-          <div class="panel card">
-            <h3>NDA Foundation</h3>
-            <p>Complete written exam preparation with live classes, notes, and regular assessments.</p>
-            <a class="btn btn-dark auth-required" href="#" data-href="https://defencecoaching.org/course/index.php">View Courses</a>
+      <div class="course-grid" id="courses-grid">
+        <article class="course-card" data-category="ssb">
+          <div class="card-top">
+            <h3 class="card-title">SSB Stage 1: OIR & PPDT</h3>
+            <span class="card-badge">SSB</span>
           </div>
-          <div class="panel card">
-            <h3>Sainik School Prep</h3>
-            <p>Smart practice sessions, reasoning drills, and exam-oriented study modules.</p>
-            <a class="btn btn-dark auth-required" href="#" data-href="https://defencecoaching.org/course/index.php">Join Program</a>
+          <div class="course-meta">
+            <p>Complete practice sets for Officer Intelligence Rating tests and Picture Perception & Discussion Test preparation.</p>
+            <button type="button" onclick="openAuthModal()">View Details</button>
           </div>
-          <div class="panel card">
-            <h3>SSB Interview</h3>
-            <p>Personality development, group tasks, and interview preparation support.</p>
-            <a class="btn btn-dark auth-required" href="#" data-href="https://defencecoaching.org/course/index.php">Start Learning</a>
+        </article>
+
+        <article class="course-card" data-category="nda">
+          <div class="card-top">
+            <h3 class="card-title">NDA Foundation Batch</h3>
+            <span class="card-badge">NDA</span>
           </div>
-        </div>
-      </section>
+          <div class="course-meta">
+            <p>1-year written exam coaching covering Maths, GAT, English, and current affairs with daily practice.</p>
+            <button type="button" onclick="openAuthModal()">View Details</button>
+          </div>
+        </article>
 
-      <section id="about" style="margin-top: 1.5rem;">
-        <div class="panel">
-          <h2 class="section-title">About the LMS</h2>
-          <p>Our Moodle-based learning portal is built to give students a smooth, modern experience on desktop or mobile. You can access lessons, assignments, and practice tests directly from the LMS and stay connected with your coaching journey.</p>
-        </div>
-      </section>
+        <article class="course-card" data-category="sainik">
+          <div class="card-top">
+            <h3 class="card-title">AISSEE Class 6th Coaching</h3>
+            <span class="card-badge">Sainik</span>
+          </div>
+          <div class="course-meta">
+            <p>Focused entrance preparation for Maths, Intelligence, English, and full mock tests for Class 6.</p>
+            <button type="button" onclick="openAuthModal()">View Details</button>
+          </div>
+        </article>
 
-      <section id="contact" class="contact-box">
-        <div>
-          <h3 style="margin:0;">Ready to begin?</h3>
-          <p style="margin:0.25rem 0 0; color: var(--muted);">Get started with your account or contact the support team for enrollment help.</p>
-        </div>
-        <div class="btn-row">
-          <a class="btn btn-primary" href="https://defencecoaching.org/login/index.php" target="_blank" rel="noopener noreferrer">Login to LMS</a>
-          <a class="btn btn-secondary" href="mailto:support@defencecoaching.org">Contact Support</a>
-        </div>
-      </section>
-    </div>
-
-    <div id="auth-modal" class="modal hidden">
-      <div class="modal-backdrop" onclick="closeAuthModal()"></div>
-      <div class="modal-card">
-        <h3>Please login or register first</h3>
-        <p>To access courses and LMS resources, please login now or create a new account.</p>
-        <div class="modal-actions">
-          <a class="btn btn-primary" href="https://defencecoaching.org/login/index.php" target="_blank" rel="noopener noreferrer">Login Now</a>
-          <a class="btn btn-secondary" href="https://defencecoaching.org/login/signup.php" target="_blank" rel="noopener noreferrer">Register Now</a>
-        </div>
-        <button class="btn btn-outline" type="button" onclick="closeAuthModal()">Maybe later</button>
+        <article class="course-card" data-category="agniveer">
+          <div class="card-top">
+            <h3 class="card-title">Agniveer Army GD & Tech</h3>
+            <span class="card-badge">Agniveer</span>
+          </div>
+          <div class="course-meta">
+            <p>CBT preparation with physical training guidance and trade-specific study material for Agniveer aspirants.</p>
+            <button type="button" onclick="openAuthModal()">View Details</button>
+          </div>
+        </article>
       </div>
-    </div>
+    </section>
 
-    <script>
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker
-            .register('./sw.js')
-            .then((reg) => console.log('Service Worker active on scope:', reg.scope))
-            .catch((err) => console.error('Service Worker failed to register:', err));
+    <section class="contact-card" id="contact">
+      <h3>Need help with your application?</h3>
+      <p>Reach out for support on admissions, LMS access, or study guidance and stay on track with your defence preparation.</p>
+      <div class="btn-row">
+        <button class="btn btn-primary" type="button" onclick="openAuthModal()">Login to LMS</button>
+        <a class="btn btn-secondary" href="mailto:support@defencecoaching.org">Contact Support</a>
+      </div>
+    </section>
+  </div>
+
+  <div id="auth-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="auth-title">
+      <button class="close-icon" type="button" onclick="closeAuthModal()">×</button>
+      <h3 id="auth-title">Please login or register first</h3>
+      <p>Access course details and full LMS content after signing in with Defence Coaching.</p>
+      <div class="modal-actions">
+        <a class="btn btn-primary" href="https://defencecoaching.org/login/index.php" target="_blank" rel="noopener noreferrer">Login Now</a>
+        <a class="btn btn-secondary" href="https://defencecoaching.org/login/signup.php" target="_blank" rel="noopener noreferrer">Register Now</a>
+      </div>
+      <button class="close-modal" type="button" onclick="closeAuthModal()">Maybe later</button>
+    </div>
+  </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker
+          .register('./sw.js')
+          .then((reg) => console.log('Service Worker active on scope:', reg.scope))
+          .catch((err) => console.error('Service Worker failed to register:', err));
+      });
+    }
+
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (event) => {
+      event.preventDefault();
+      deferredPrompt = event;
+    });
+
+    window.addEventListener('appinstalled', () => {
+      console.log('PWA installed');
+    });
+
+    async function installPWA() {
+      if (!deferredPrompt) {
+        alert('Install is not available from this browser. Use your browser menu to add to the home screen.');
+        return;
+      }
+
+      try {
+        deferredPrompt.prompt();
+        const choiceResult = await deferredPrompt.userChoice;
+        if (choiceResult.outcome === 'accepted') {
+          console.log('PWA installation accepted');
+        } else {
+          console.log('PWA installation dismissed');
+        }
+      } catch (error) {
+        console.error('Install prompt failed:', error);
+        alert('Install is not available from this browser. Use your browser menu instead.');
+      }
+      deferredPrompt = null;
+    }
+
+    function openAuthModal() {
+      const modal = document.getElementById('auth-modal');
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden', 'false');
+    }
+
+    function closeAuthModal() {
+      const modal = document.getElementById('auth-modal');
+      modal.classList.add('hidden');
+      modal.setAttribute('aria-hidden', 'true');
+    }
+
+    function setFilter(category, button) {
+      document.querySelectorAll('.filter-button').forEach((btn) => btn.classList.remove('active'));
+      button.classList.add('active');
+
+      document.querySelectorAll('#courses-grid .course-card').forEach((card) => {
+        const cardCat = card.dataset.category;
+        card.style.display = category === 'all' || cardCat === category ? 'grid' : 'none';
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.nav-links a').forEach((link) => {
+        link.addEventListener('click', () => {
+          document.querySelectorAll('.nav-links a').forEach((item) => item.classList.remove('active'));
+          link.classList.add('active');
         });
-      }
-
-      let deferredPrompt;
-      window.addEventListener('beforeinstallprompt', (event) => {
-        event.preventDefault();
-        deferredPrompt = event;
-        const notice = document.getElementById('install-notice');
-        if (notice) {
-          notice.textContent = 'This app is ready to install. Click Install App to add it to your device.';
-          notice.classList.remove('hidden');
-        }
       });
 
-      window.addEventListener('appinstalled', () => {
-        const notice = document.getElementById('install-notice');
-        if (notice) {
-          notice.textContent = 'The app has been installed successfully.';
-          notice.classList.remove('hidden');
-        }
-      });
-
-      async function installPWA() {
-        if (!deferredPrompt) {
-          showInstallTip();
-          return;
-        }
-        try {
-          deferredPrompt.prompt();
-          const choiceResult = await deferredPrompt.userChoice;
-          if (choiceResult.outcome === 'accepted') {
-            console.log('PWA installation accepted');
-          } else {
-            console.log('PWA installation dismissed');
-          }
-        } catch (error) {
-          console.error('Install prompt failed:', error);
-          showInstallTip();
-        }
-        deferredPrompt = null;
-      }
-
-      function showInstallTip() {
-        const notice = document.getElementById('install-notice');
-        if (notice) {
-          notice.textContent = 'Install is not available from this browser. Use your browser menu and choose Add to Home screen instead.';
-          notice.classList.remove('hidden');
-        }
-      }
-
-      function showAuthModal() {
-        const modal = document.getElementById('auth-modal');
-        if (modal) modal.classList.remove('hidden');
-      }
-
-      function closeAuthModal() {
-        const modal = document.getElementById('auth-modal');
-        if (modal) modal.classList.add('hidden');
-      }
-
-      document.addEventListener('DOMContentLoaded', () => {
-        document.querySelectorAll('.auth-required').forEach((link) => {
-          link.addEventListener('click', (event) => {
-            event.preventDefault();
-            showAuthModal();
+      // Load the hero image from the base64 file if available (1.b64),
+      // otherwise fall back to the local JPEG. This keeps the HTML small
+      // while allowing a reliable inline-data fallback when served over HTTP.
+      const heroCard = document.querySelector('.hero-image-card');
+      if (heroCard) {
+        fetch('./1.b64')
+          .then((res) => {
+            if (!res.ok) throw new Error('b64 fetch failed');
+            return res.text();
+          })
+          .then((b64) => {
+            const cleaned = b64.replace(/\s+/g, '');
+            heroCard.style.backgroundImage = "url('data:image/jpeg;base64," + cleaned + "')";
+          })
+          .catch(() => {
+            // keep existing background-image (./1.jpg) if fetch fails
+            heroCard.style.backgroundImage = "url('./1.jpg')";
           });
-        });
-      });
-    </script>
-  </body>
+      }
+    });
+
+    // Prioritize hero image on small screens for faster visibility
+    (function prioritizeHeroImage() {
+      try {
+        const heroImg = document.querySelector('.hero-image-card img');
+        if (!heroImg) return;
+        if (window.innerWidth <= 680) {
+          // load eagerly on small devices
+          heroImg.loading = 'eager';
+          // ensure browser decodes asap when supported
+          if (heroImg.decode) heroImg.decode().catch(() => {});
+        }
+      } catch (e) {
+        console.warn('Hero image prioritization failed', e);
+      }
+    })();
+  </script>
+</body>
 </html>
