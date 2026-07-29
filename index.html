@@ -248,7 +248,7 @@
           </div>
           <div class="top-actions">
             <a class="btn btn-outline" href="https://defencecoaching.org/login/index.php" target="_blank" rel="noopener noreferrer">Login</a>
-            <button id="pwa-install-btn-top" class="btn btn-dark hidden" type="button" onclick="installPWA()">Install App</button>
+            <button id="pwa-install-btn-top" class="btn btn-dark" type="button" onclick="installPWA()">Install App</button>
           </div>
         </nav>
         <div class="hero" id="home">
@@ -258,9 +258,11 @@
             <div class="btn-row">
               <a class="btn btn-primary auth-required" href="#" data-href="https://defencecoaching.org/login/index.php">Open Moodle LMS</a>
               <a class="btn btn-secondary" href="#courses">Browse Courses</a>
-              <button id="pwa-install-btn" class="btn btn-dark hidden" type="button" onclick="installPWA()">Install App</button>
+              <button id="pwa-install-btn" class="btn btn-dark" type="button" onclick="installPWA()">Install App</button>
             </div>
-            <p id="install-notice" class="install-notice hidden">Install available in supported browsers. If you do not see the prompt, use your browser menu to add this app.</p>
+            <div id="install-notice" class="install-notice hidden">
+              Install is available in supported browsers. If nothing happens when you click Install, use your browser menu and choose Add to Home screen.
+            </div>
           </div>
           <div class="panel">
             <h3>Why learners choose us</h3>
@@ -387,34 +389,45 @@
       window.addEventListener('beforeinstallprompt', (event) => {
         event.preventDefault();
         deferredPrompt = event;
-        document.querySelectorAll('#pwa-install-btn, #pwa-install-btn-top').forEach((button) => {
-          if (button) button.classList.remove('hidden');
-        });
         const notice = document.getElementById('install-notice');
-        if (notice) notice.classList.remove('hidden');
+        if (notice) {
+          notice.textContent = 'This app is ready to install. Click Install App to add it to your device.';
+          notice.classList.remove('hidden');
+        }
       });
 
-      function installPWA() {
+      window.addEventListener('appinstalled', () => {
+        const notice = document.getElementById('install-notice');
+        if (notice) {
+          notice.textContent = 'The app has been installed successfully.';
+          notice.classList.remove('hidden');
+        }
+      });
+
+      async function installPWA() {
         if (!deferredPrompt) {
           showInstallTip();
           return;
         }
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
+        try {
+          deferredPrompt.prompt();
+          const choiceResult = await deferredPrompt.userChoice;
           if (choiceResult.outcome === 'accepted') {
             console.log('PWA installation accepted');
+          } else {
+            console.log('PWA installation dismissed');
           }
-          deferredPrompt = null;
-          document.querySelectorAll('#pwa-install-btn, #pwa-install-btn-top').forEach((button) => {
-            if (button) button.classList.add('hidden');
-          });
-        });
+        } catch (error) {
+          console.error('Install prompt failed:', error);
+          showInstallTip();
+        }
+        deferredPrompt = null;
       }
 
       function showInstallTip() {
         const notice = document.getElementById('install-notice');
         if (notice) {
-          notice.textContent = 'Install is not available from this browser yet. Use your browser menu and choose Add to Home screen.';
+          notice.textContent = 'Install is not available from this browser. Use your browser menu and choose Add to Home screen instead.';
           notice.classList.remove('hidden');
         }
       }
