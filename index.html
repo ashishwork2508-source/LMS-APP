@@ -6,11 +6,14 @@
   <meta name="theme-color" content="#0f172a" />
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Defence Coaching" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="description" content="Defence Coaching LMS portal for NDA, Sainik, Agniveer, and SSB preparation." />
   <link rel="manifest" href="/manifest.json" />
   <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-  <link rel="apple-touch-icon" href="/icon-192x192.png" />
+  <link rel="shortcut icon" href="/icon-192x192.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="/icon-192x192.png" />
+  <link rel="mask-icon" href="/icon.svg" color="#0f172a" />
   <title>Defence Coaching - NDA, Sainik School, Agniveer & SSB</title>
   <style>
     :root {
@@ -137,6 +140,42 @@
 
     .install-info.visible {
       display: block;
+    }
+
+    .install-banner {
+      position: fixed;
+      left: 1rem;
+      right: 1rem;
+      bottom: 1rem;
+      background: rgba(15, 23, 42, 0.96);
+      color: #ffffff;
+      padding: 1rem 1rem 0.9rem;
+      border-radius: 1.2rem;
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
+      z-index: 50;
+      display: grid;
+      gap: 0.75rem;
+      align-items: start;
+    }
+
+    .install-banner.hidden {
+      display: none;
+    }
+
+    .install-banner strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .install-banner p {
+      margin: 0;
+      line-height: 1.5;
+      color: rgba(255, 255, 255, 0.92);
+    }
+
+    .install-banner button {
+      justify-self: end;
     }
 
     .btn-primary,
@@ -590,11 +629,18 @@
 
         <div class="actions">
           <button class="btn btn-secondary" type="button" onclick="openAuthModal()">Login</button>
+          <a class="btn btn-tertiary" href="https://defencecoaching.org/login/signup.php" target="_blank" rel="noopener noreferrer">Register Now</a>
           <button id="pwa-install-btn-top" class="btn btn-primary" type="button" onclick="installPWA()">Install App</button>
         </div>
         <div id="install-info" class="install-info" aria-live="polite"></div>
       </div>
     </header>
+
+    <div id="ios-install-banner" class="install-banner hidden" role="status" aria-live="polite">
+      <strong>Install on iOS</strong>
+      <p>Open this page in Safari, tap the Share button, then choose Add to Home Screen.</p>
+      <button class="btn btn-secondary" type="button" onclick="dismissIosInstallBanner()">Got it</button>
+    </div>
 
     <section class="hero" id="home">
       <div class="hero-grid">
@@ -714,15 +760,30 @@
 
     function getFallbackInstallMessage() {
       if (isIos()) {
-        return 'Install is not supported by Safari. Use the Share menu and choose Add to Home Screen.';
+        return 'On iOS, open Safari Share > Add to Home Screen to install this app.';
       }
-      return 'Install prompt is not available in this browser. Use your browser menu or Add to Home screen.';
+      return 'Install prompt is not available in this browser. Use your browser menu and choose Add to Home screen.';
     }
 
     function showInstallMessage(message) {
       if (!installInfo) return;
       installInfo.textContent = message;
       installInfo.classList.add('visible');
+    }
+
+    function isStandalone() {
+      return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    }
+
+    function showIosInstallBanner() {
+      if (!isIos() || isStandalone()) return;
+      const banner = document.getElementById('ios-install-banner');
+      if (banner) banner.classList.remove('hidden');
+    }
+
+    function dismissIosInstallBanner() {
+      const banner = document.getElementById('ios-install-banner');
+      if (banner) banner.classList.add('hidden');
     }
 
     window.addEventListener('beforeinstallprompt', (event) => {
@@ -794,8 +855,14 @@
         });
       });
 
-      if (!('onbeforeinstallprompt' in window) && !isIos()) {
-        showInstallMessage('If the install prompt does not appear, use your browser menu and choose Install App or Add to Home screen.');
+      if (isIos()) {
+        showInstallMessage('On iOS, use Safari Share > Add to Home Screen to install this app.');
+      } else if (!('onbeforeinstallprompt' in window)) {
+        showInstallMessage('If Install App does not appear, use your browser menu and choose Add to Home screen.');
+      }
+
+      if (isIos()) {
+        showIosInstallBanner();
       }
     });
 
