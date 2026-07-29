@@ -580,7 +580,7 @@
 
         <div class="actions">
           <button class="btn btn-secondary" type="button" onclick="openAuthModal()">Login</button>
-          <button class="btn btn-primary" type="button" onclick="installPWA()">Install App</button>
+          <button id="pwa-install-btn-top" class="btn btn-primary" type="button" onclick="installPWA()" disabled>Install App</button>
         </div>
       </div>
     </header>
@@ -694,34 +694,55 @@
     }
 
     let deferredPrompt;
+    const installButton = document.getElementById('pwa-install-btn-top');
+
+    function isIos() {
+      return /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    }
+
+    function getFallbackInstallMessage() {
+      if (isIos()) {
+        return 'Install is not supported by Safari. Use the Share menu and choose Add to Home Screen.';
+      }
+      return 'Install prompt is not available in this browser. Use your browser menu or Add to Home screen.';
+    }
+
     window.addEventListener('beforeinstallprompt', (event) => {
       event.preventDefault();
       deferredPrompt = event;
+      if (installButton) {
+        installButton.disabled = false;
+        installButton.textContent = 'Install App';
+      }
     });
 
     window.addEventListener('appinstalled', () => {
       console.log('PWA installed');
+      if (installButton) {
+        installButton.textContent = 'Installed';
+        installButton.disabled = true;
+      }
     });
 
     async function installPWA() {
-      if (!deferredPrompt) {
-        alert('Install is not available from this browser. Use your browser menu to add to the home screen.');
+      if (deferredPrompt) {
+        try {
+          deferredPrompt.prompt();
+          const choiceResult = await deferredPrompt.userChoice;
+          if (choiceResult.outcome === 'accepted') {
+            console.log('PWA installation accepted');
+          } else {
+            console.log('PWA installation dismissed');
+          }
+        } catch (error) {
+          console.error('Install prompt failed:', error);
+          alert(getFallbackInstallMessage());
+        }
+        deferredPrompt = null;
         return;
       }
 
-      try {
-        deferredPrompt.prompt();
-        const choiceResult = await deferredPrompt.userChoice;
-        if (choiceResult.outcome === 'accepted') {
-          console.log('PWA installation accepted');
-        } else {
-          console.log('PWA installation dismissed');
-        }
-      } catch (error) {
-        console.error('Install prompt failed:', error);
-        alert('Install is not available from this browser. Use your browser menu instead.');
-      }
-      deferredPrompt = null;
+      alert(getFallbackInstallMessage());
     }
 
     function openAuthModal() {
